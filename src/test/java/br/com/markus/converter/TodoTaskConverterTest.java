@@ -35,9 +35,9 @@ public class TodoTaskConverterTest extends ApplicationTests {
         assert todoTask.getId().equals(Long.valueOf(todoTaskDTO.getId()));
         assert todoTask.getName().equals(todoTaskDTO.getName());
         assert todoTask.getDescription().equals(todoTaskDTO.getDescription());
-        assert todoTask.getWhere().equals(todoTaskDTO.getWhere());
-        assert todoTask.getStartDate().equals(todoTaskDTO.getStartDate());
-        assert todoTask.getEndDate().equals(todoTaskDTO.getEndDate());
+        assert todoTask.getLocation().equals(todoTaskDTO.getLocation());
+        assert String.valueOf(todoTask.getStartDate().getTime()).equals(todoTaskDTO.getStartDate());
+        assert String.valueOf(todoTask.getEndDate().getTime()).equals(todoTaskDTO.getEndDate());
     }
 
     private TodoTask getDefaultTask(){
@@ -45,7 +45,7 @@ public class TodoTaskConverterTest extends ApplicationTests {
         todoTask.setId(Long.valueOf(1));
         todoTask.setName("Default TodoTask");
         todoTask.setDescription("Default Description");
-        todoTask.setWhere("Default Where");
+        todoTask.setLocation("Default Location");
         todoTask.setStartDate(new Date());
         todoTask.setEndDate(new Date());
         return todoTask;

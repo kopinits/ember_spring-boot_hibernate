@@ -1,7 +1,5 @@
 package br.com.markus.dto;
 
-import java.util.Date;
-
 /**
  * Created by Markus on 06/08/2015.
  */
@@ -9,9 +7,9 @@ public class TodoTaskDTO {
     private String id;
     private String name;
     private String description;
-    private Date startDate;
-    private Date endDate;
-    private String where;
+    private String startDate;
+    private String endDate;
+    private String location;
 
     public String getId() {
         return id;
@@ -37,27 +35,27 @@ public class TodoTaskDTO {
         this.description = description;
     }
 
-    public Date getStartDate() {
+    public String getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(Date startDate) {
+    public void setStartDate(String startDate) {
         this.startDate = startDate;
     }
 
-    public Date getEndDate() {
+    public String getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(Date endDate) {
+    public void setEndDate(String endDate) {
         this.endDate = endDate;
     }
 
-    public String getWhere() {
-        return where;
+    public String getLocation() {
+        return location;
     }
 
-    public void setWhere(String where) {
-        this.where = where;
+    public void setLocation(String location) {
+        this.location = location;
     }
 }

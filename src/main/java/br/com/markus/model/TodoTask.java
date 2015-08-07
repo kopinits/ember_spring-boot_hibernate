@@ -5,29 +5,35 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.sql.Timestamp;
 import java.util.Date;
 
 /**
  * Created by Markus on 06/08/2015.
  */
 @Entity
-@Table(name = "task")
+@Table(name = "todotask")
 public class TodoTask {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     public Long id;
+
     @NotNull
     @Column(name = "name")
     private String name;
+
     @Column(name = "description")
     private String description;
-    @Column(name = "startDate")
+
+    @NotNull
+    @Column(name = "start_date")
     private Date startDate;
-    @Column(name = "endDate")
+
+    @NotNull
+    @Column(name = "end_date")
     private Date endDate;
-    @Column(name = "where")
-    private String where;
+
+    @Column(name = "location")
+    private String location;
 
     public Long getId() {
         return id;
@@ -69,12 +75,12 @@ public class TodoTask {
         this.endDate = endDate;
     }
 
-    public String getWhere() {
-        return where;
+    public String getLocation() {
+        return location;
     }
 
-    public void setWhere(String where) {
-        this.where = where;
+    public void setLocation(String location) {
+        this.location = location;
     }
 
     @Override
@@ -91,7 +97,7 @@ public class TodoTask {
                 .append(getDescription(), todoTask.getDescription())
                 .append(getStartDate(), todoTask.getStartDate())
                 .append(getEndDate(), todoTask.getEndDate())
-                .append(getWhere(), todoTask.getWhere())
+                .append(getLocation(), todoTask.getLocation())
                 .isEquals();
     }
 
@@ -103,7 +109,7 @@ public class TodoTask {
                 .append(getDescription())
                 .append(getStartDate())
                 .append(getEndDate())
-                .append(getWhere())
+                .append(getLocation())
                 .toHashCode();
     }
 }
