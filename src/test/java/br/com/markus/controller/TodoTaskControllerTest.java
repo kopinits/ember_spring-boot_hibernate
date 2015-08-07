@@ -47,7 +47,15 @@ public class TodoTaskControllerTest extends ApplicationTests {
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
+    }
 
+    @Test
+    public void testCreateTaskFail() throws Exception {
+        mockMvc.perform(get("/task/save")
+                .content(asJsonString(getDefaultTaskDTO()))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isMethodNotAllowed());
     }
 
     @Test
@@ -61,12 +69,31 @@ public class TodoTaskControllerTest extends ApplicationTests {
     }
 
     @Test
+    public void testGetTaskFail() throws Exception {
+        TodoTaskDTO todoTaskDTO = persistNewTodoTask();
+        mockMvc.perform(post("/task/get")
+                .content(asJsonString(todoTaskDTO))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isMethodNotAllowed());
+    }
+
+    @Test
     public void testListTask() throws Exception {
         mockMvc.perform(get("/task/list")
                 .content(asJsonString(getDefaultTaskDTO()))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    public void testListTaskFail() throws Exception {
+        mockMvc.perform(post("/task/list")
+                .content(asJsonString(getDefaultTaskDTO()))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isMethodNotAllowed());
     }
 
     @Test
@@ -80,6 +107,7 @@ public class TodoTaskControllerTest extends ApplicationTests {
                 .andExpect(status().isOk());
     }
 
+
     @Test
     public void testRemoveTask() throws Exception {
         TodoTaskDTO todoTaskDTO = persistNewTodoTask();
@@ -88,6 +116,16 @@ public class TodoTaskControllerTest extends ApplicationTests {
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    public void testRemoveTaskFail() throws Exception {
+        TodoTaskDTO todoTaskDTO = persistNewTodoTask();
+        mockMvc.perform(post("/task/get")
+                .content(asJsonString(todoTaskDTO))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isMethodNotAllowed());
     }
 
     private String asJsonString(final Object obj) {
