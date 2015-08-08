@@ -16,11 +16,9 @@ A simple RestFull application using Spring-boot+JPA+Hibernate+MySQL
 
 
 ***DB generetion script***
-CREATE DATABASE  IF NOT EXISTS `todolist` /*!40100 DEFAULT CHARACTER SET utf8 */;
+
+CREATE DATABASE  IF NOT EXISTS `todolist`;
 USE `todolist`;
---
--- Table structure for table `todotask`
---
 
 DROP TABLE IF EXISTS `todotask`;
 CREATE TABLE `todotask` (
