@@ -1,0 +1,23 @@
+/* Put your CSS here */
+html, body {
+    margin: 20px;
+}
+
+.page-header a h1 {
+  color: #555;
+}
+
+.new-task-button {
+  margin-left: 2em;
+  padding: 3px 10px;
+}
+
+.del-task-button {
+  margin-left: 2em;
+  padding: 3px 10px;
+}
+.list {
+  width: 100%;
+}
+
+
