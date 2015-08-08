@@ -15,7 +15,7 @@ A simple RestFull application using Spring-boot+JPA+Hibernate+MySQL
 {"id":null, "name":"Default TODOTask Name", "description":"Default TODOTask Description", "startDate":1437361289578,"endDate":1437879689706,"location":"At Home"}
 
 
-***DB generetion script***
+***DB Script***
 
 CREATE DATABASE  IF NOT EXISTS `todolist`;
 USE `todolist`;
