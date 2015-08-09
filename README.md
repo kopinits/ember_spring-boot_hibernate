@@ -1,7 +1,7 @@
 # MarkusTodoList
 ***Simple TODO list application.***
 
-A simple RestFull application using Spring-boot+JPA+Hibernate+MySQL
+A simple RestFull application using Ember.js+Spring-boot+JPA+Hibernate+MySQL
 
 ***Services url:***
 
