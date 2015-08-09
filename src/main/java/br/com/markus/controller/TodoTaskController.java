@@ -44,7 +44,8 @@ public class TodoTaskController {
     }
 
     @RequestMapping(value = "/remove", method = RequestMethod.DELETE)
-    public void removeTask(@RequestBody TodoTaskDTO taskDTO) {
+    public Collection<TodoTaskDTO> removeTask(@RequestBody TodoTaskDTO taskDTO) {
         taskDAO.delete(Long.valueOf(taskDTO.getId()));
+        return listTask();
     }
 }

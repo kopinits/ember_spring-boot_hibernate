@@ -88,8 +88,8 @@ App.TasksRoute = Ember.Route.extend({
                     window.location.replace("#/tasks");
                 },
                 error: function () {
-                    alert("error");
-                    window.location.replace("#/tasks");
+                    alert('Error to save task');
+                    window.location.replace("#/");
                 }
             });
         },
@@ -106,12 +106,12 @@ App.TasksRoute = Ember.Route.extend({
                     "startDate": null,
                     "endDate": null,
                     "location": null
-                }), success: function (data) {
+                }), success: function () {
                     alert('Task deleted');
-                    window.location.replace("#/tasks");
+                    window.location.replace("#/");
                 }, error: function () {
-                    alert('error');
-                    window.location.replace("#/tasks");
+                    alert('Error to delete task');
+                    window.location.replace("#/");
                 }
             });
         }
