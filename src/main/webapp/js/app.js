@@ -1,18 +1,18 @@
-App = Ember.Application.create({ LOG_TRANSITIONS: true});
+App = Ember.Application.create({LOG_TRANSITIONS: true});
 
-App.Router.map(function() {
-  this.route("index", { path: "/" });
+App.Router.map(function () {
+    this.route("index", {path: "/"});
 
-  this.resource("tasks", function(){
-      console.log("Inside tasks....");
-      this.route("new", {path:"/new"});
-      this.route("edit", {path: "/:task_id" });
-  });
+    this.resource("tasks", function () {
+        console.log("Inside tasks....");
+        this.route("new", {path: "/new"});
+        this.route("edit", {path: "/:task_id"});
+    });
 
 });
 
 App.ApplicationSerializer = DS.RESTSerializer.extend({
-  primaryKey: 'id'
+    primaryKey: 'id'
 });
 
 App.ApplicationAdapter = DS.RESTAdapter.extend({
@@ -21,7 +21,7 @@ App.ApplicationAdapter = DS.RESTAdapter.extend({
 
 
 App.Store = DS.Store.extend({
-  adapter: 'App.ApplicationAdapter'
+    adapter: 'App.ApplicationAdapter'
 });
 
 
@@ -35,48 +35,48 @@ App.Task = DS.Model.extend({
 
 App.TasksIndexRoute = Ember.Route.extend({
 
-  setupController: function(controller) {
-      var tasks = Ember.A();
-      Ember.$.getJSON('http://localhost:8080/task/list', function(Tasks) {
-          Tasks.forEach(function(data) {
-              tasks.pushObject(data);
-          });
-      });
-    controller.set('content', tasks);
-  },
+    setupController: function (controller) {
+        var tasks = Ember.A();
+        Ember.$.getJSON('http://localhost:8080/task/list', function (Tasks) {
+            Tasks.forEach(function (data) {
+                tasks.pushObject(data);
+            });
+        });
+        controller.set('content', tasks);
+    },
 
-  renderTemplate: function() {
-    this.render('tasks.index',{into:'application'});
-  }
+    renderTemplate: function () {
+        this.render('tasks.index', {into: 'application'});
+    }
 
 });
 
 App.TasksEditRoute = Ember.Route.extend({
 
-  setupController: function(controller, model) {
-      this.controllerFor('tasks.edit').setProperties({isNew: false,content:model});
-  },
+    setupController: function (controller, model) {
+        this.controllerFor('tasks.edit').setProperties({isNew: false, content: model});
+    },
 
-  renderTemplate: function() {
-    this.render('tasks.edit',{into:'application'});
-  }
+    renderTemplate: function () {
+        this.render('tasks.edit', {into: 'application'});
+    }
 
 });
 
 App.TasksNewRoute = Ember.Route.extend({
-  setupController: function(controller, model) {
-        var newTask = this.store.createRecord('task',{});
-        this.controllerFor('tasks.edit').setProperties({isNew: true,content:newTask});
-  },
-  renderTemplate: function() {
-    this.render('tasks.edit',{into:'application'});
-  }
+    setupController: function (controller, model) {
+        var newTask = this.store.createRecord('task', {});
+        this.controllerFor('tasks.edit').setProperties({isNew: true, content: newTask});
+    },
+    renderTemplate: function () {
+        this.render('tasks.edit', {into: 'application'});
+    }
 
 });
 
 App.TasksRoute = Ember.Route.extend({
     actions: {
-        updateItem: function(task) {
+        updateItem: function (task) {
             $.ajax({
                 type: "post",
                 url: "/task/save/",
@@ -84,14 +84,16 @@ App.TasksRoute = Ember.Route.extend({
                 dataType: "json",
                 data: JSON.stringify(task),
                 success: function (data) {
-                    redirect();
+                    alert('Task updated');
+                    window.location.replace("#/tasks");
                 },
                 error: function () {
-                    redirect();
+                    alert("error");
+                    window.location.replace("#/tasks");
                 }
             });
         },
-        removeTask: function(id) {
+        removeTask: function (id) {
             $.ajax({
                 type: "delete",
                 url: "/task/remove/",
@@ -105,32 +107,30 @@ App.TasksRoute = Ember.Route.extend({
                     "endDate": null,
                     "location": null
                 }), success: function (data) {
-                    redirect();
+                    alert('Task deleted');
+                    window.location.replace("#/tasks");
                 }, error: function () {
-                    redirect();
+                    alert('error');
+                    window.location.replace("#/tasks");
                 }
             });
         }
     }
 });
 
-function redirect() {
-    alert("done");
-}
-
 App.TasksEditController = Ember.ObjectController.extend({
-  isNew: function() {
-    console.log("calculating isNew");
-    return this.get('content').get('id');
-  }.property()
+    isNew: function () {
+        console.log("calculating isNew");
+        return this.get('content').get('id');
+    }.property()
 });
 
 
 App.TasksIndexController = Ember.ArrayController.extend({
-  tasksPresent: function() {
-    var itemsPresent = this.get('content').get('length') > 0;
-    return itemsPresent;
-  }.property("content.@each")
+    tasksPresent: function () {
+        var itemsPresent = this.get('content').get('length') > 0;
+        return itemsPresent;
+    }.property("content.@each")
 });
 
 App.NavView = Ember.View.extend({
@@ -138,15 +138,15 @@ App.NavView = Ember.View.extend({
     classNameBindings: ['active'],
 
     didInsertElement: function () {
-          this._super();
-          this.notifyPropertyChange('active');
-          var _this = this;
-          this.get('parentView').on('click', function () {
-              _this.notifyPropertyChange('active');
-          });
+        this._super();
+        this.notifyPropertyChange('active');
+        var _this = this;
+        this.get('parentView').on('click', function () {
+            _this.notifyPropertyChange('active');
+        });
     },
 
-    active: function() {
-      return this.get('childViews.firstObject.active');
+    active: function () {
+        return this.get('childViews.firstObject.active');
     }.property()
 });
