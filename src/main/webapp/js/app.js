@@ -77,7 +77,6 @@ App.TasksNewRoute = Ember.Route.extend({
 App.TasksRoute = Ember.Route.extend({
     actions: {
         updateItem: function(task) {
-            alert(JSON.stringify(task));
             $.ajax('http://localhost:8080/task/save/', {
                 type: 'POST',
                 contentType:"application/json",
@@ -92,13 +91,11 @@ App.TasksRoute = Ember.Route.extend({
             });
         },
         removeTask: function(id) {
-            var task = { id: id, name: null, description:null,
-                startDate:null, endDate:null, location:null };
-            alert(JSON.stringify(task));
+            var task = { "id": id, "name": null, "description":null,
+                "startDate":null, "endDate":null, "location":null };
             $.ajax({
                 url:'http://localhost:8080/task/remove/',
                 type: 'DELETE',
-                contentType:"application/json",
                 dataType: "json",
                 data: JSON.stringify(task),
                 success: function(data) {
