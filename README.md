@@ -30,6 +30,3 @@ CREATE TABLE `todotask` (
   `start_date` datetime NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8;
-
-***TODO***
-redirect after update/delete
