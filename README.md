@@ -31,6 +31,5 @@ CREATE TABLE `todotask` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8;
 
-
-***TODO:***
-Ajax calls to update and remove
+***TODO***
+redirect after update/delete

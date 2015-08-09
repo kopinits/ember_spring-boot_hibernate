@@ -16,7 +16,7 @@ App.ApplicationSerializer = DS.RESTSerializer.extend({
 });
 
 App.ApplicationAdapter = DS.RESTAdapter.extend({
-    host: 'http://localhost:8080/task/'
+    host: 'http://localhost:8080'
 });
 
 
@@ -77,37 +77,46 @@ App.TasksNewRoute = Ember.Route.extend({
 App.TasksRoute = Ember.Route.extend({
     actions: {
         updateItem: function(task) {
-            $.ajax('http://localhost:8080/task/save/', {
-                type: 'POST',
-                contentType:"application/json",
+            $.ajax({
+                type: "post",
+                url: "/task/save/",
+                contentType: "application/json",
                 dataType: "json",
                 data: JSON.stringify(task),
-                success: function(data) {
-                    alert('Task updated');
+                success: function (data) {
+                    redirect();
                 },
-                error: function() {
-                    alert('Failed to save Task');
+                error: function () {
+                    redirect();
                 }
             });
         },
         removeTask: function(id) {
-            var task = { "id": id, "name": null, "description":null,
-                "startDate":null, "endDate":null, "location":null };
             $.ajax({
-                url:'http://localhost:8080/task/remove/',
-                type: 'DELETE',
+                type: "delete",
+                url: "/task/remove/",
+                contentType: "application/json",
                 dataType: "json",
-                data: JSON.stringify(task),
-                success: function(data) {
-                    alert('Task removed');
-                },
-                error: function() {
-                    alert('Failed to remove Task');
+                data: JSON.stringify({
+                    "id": id,
+                    "name": null,
+                    "description": null,
+                    "startDate": null,
+                    "endDate": null,
+                    "location": null
+                }), success: function (data) {
+                    redirect();
+                }, error: function () {
+                    redirect();
                 }
             });
         }
     }
 });
+
+function redirect() {
+    alert("done");
+}
 
 App.TasksEditController = Ember.ObjectController.extend({
   isNew: function() {
