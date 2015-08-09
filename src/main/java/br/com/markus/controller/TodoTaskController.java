@@ -25,7 +25,7 @@ public class TodoTaskController {
     private TodoTaskConverter converter;
 
     @RequestMapping(value = "/save", method = RequestMethod.POST)
-    public TodoTaskDTO createTask(@RequestBody TodoTaskDTO taskDTO) {
+    public TodoTaskDTO createTask(@RequestBody TodoTaskDTO taskDTO) throws Exception {
         TodoTask task = converter.toTask(taskDTO);
         taskDAO.save(task);
         return converter.fromTask(task);

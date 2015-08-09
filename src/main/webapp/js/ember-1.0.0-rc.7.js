@@ -1,5 +1,5 @@
-// Version: v1.0.0-rc.6-289-g9253ba6
-// Last commit: 9253ba6 (2013-08-13 16:15:26 -0700)
+// Version: v1.0.0-rc.7-9-g7398406
+// Last commit: 7398406 (2013-08-14 08:30:27 -0700)
 
 
 (function() {
@@ -156,8 +156,8 @@ Ember.deprecateFunc = function(message, func) {
 
 })();
 
-// Version: v1.0.0-rc.6-289-g9253ba6
-// Last commit: 9253ba6 (2013-08-13 16:15:26 -0700)
+// Version: v1.0.0-rc.7-9-g7398406
+// Last commit: 7398406 (2013-08-14 08:30:27 -0700)
 
 
 (function() {
@@ -251,10 +251,10 @@ Ember.toString = function() { return "Ember"; };
 /**
   @property VERSION
   @type String
-  @default '1.0.0-rc.7.1'
+  @default '1.0.0-rc.7'
   @final
 */
-Ember.VERSION = '1.0.0-rc.7.1';
+Ember.VERSION = '1.0.0-rc.7';
 
 /**
   Standard environmental variables. You can define these in a global `ENV`
@@ -1442,10 +1442,10 @@ var populateListeners = function(name) {
 };
 
 var time = (function() {
-	var perf = 'undefined' !== typeof window ? window.performance || {} : {};
-	var fn = perf.now || perf.mozNow || perf.webkitNow || perf.msNow || perf.oNow;
-	// fn.bind will be available in all the browsers that support the advanced window.performance... ;-)
-	return fn ? fn.bind(perf) : function() { return +new Date(); };
+  var perf = 'undefined' !== typeof window ? window.performance || {} : {};
+  var fn = perf.now || perf.mozNow || perf.webkitNow || perf.msNow || perf.oNow;
+  // fn.bind will be available in all the browsers that support the advanced window.performance... ;-)
+  return fn ? fn.bind(perf) : function() { return +new Date(); };
 })();
 
 
@@ -7677,7 +7677,7 @@ define("container",
         as expected.
 
         @method set
-        @param {Object} obkect
+        @param {Object} object
         @param {String} key
         @param {any} value
       */
@@ -9956,7 +9956,7 @@ Ember.Array = Ember.Mixin.create(Ember.Enumerable, /** @scope Ember.Array.protot
     This returns the objects at the specified indexes, using `objectAt`.
 
     ```javascript
-    var arr = ['a', 'b', 'c', 'd'];
+    var arr =Â ['a', 'b', 'c', 'd'];
     arr.objectsAt([0, 1, 2]);  // ["a", "b", "c"]
     arr.objectsAt([2, 3, 4]);  // ["c", "d", undefined]
     ```
@@ -19541,7 +19541,7 @@ define("metamorph",
     "use strict";
     // ==========================================================================
     // Project:   metamorph
-    // Copyright: ©2011 My Company Inc. All rights reserved.
+    // Copyright: Â©2011 My Company Inc. All rights reserved.
     // ==========================================================================
 
     var K = function() {},
@@ -21652,7 +21652,7 @@ EmberHandlebars.registerHelper('unless', function(context, options) {
   ```
 
   All three strategies - string return value, boolean return value, and
-  hard-coded value – can be combined in a single declaration:
+  hard-coded value â€“ can be combined in a single declaration:
 
   ```handlebars
   <img {{bindAttr class=":class-name-to-always-apply view.someBool:class-name-if-true view.someProperty"}}>

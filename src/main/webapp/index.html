@@ -1,68 +1,137 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8">
-  <title>Integritas Challenge - Markus Kopinits</title>
+<meta charset="utf-8">
+<title>Integritas Challenge - Markus Kopinits</title>
+  <link rel="stylesheet" href="css/normalize.css">
+  <link rel="stylesheet" href="css/bootstrap.min.css" media="screen">
   <link rel="stylesheet" href="css/style.css">
-  <link rel="stylesheet" href="css/bootstrap.css">
 </head>
 <body>
-  <script type="text/x-handlebars">
-    <div class="container">
-      <div class="page-header">
-        {{#link-to "index"}}
-          <h1>TODO List<small> with Ember.js</small></h1>
-        {{/link-to}}
-      </div>
-      <div class="row">
+
+  <script type="text/x-handlebars" data-template-name="application">
+  <div class="container">
+    <h1>Integritas Challenge - Markus Kopinits</h1>
+     <div class="navbar">
+          <div class="navbar-inner">
+            <ul class="nav">
+
+              {{#view App.NavView}}
+                {{#link-to "index"}}Home{{/link-to}}
+              {{/view}}
+
+              {{#view App.NavView}}
+                {{#link-to "tasks"}}Tasks{{/link-to}}
+              {{/view}}
+
+            </ul>
+          </div>
+        </div>
         {{outlet}}
-      </div>
-    </div>
+  </div>
   </script>
 
-  <script type="text/x-handlebars" data-template-name="tasks">
-      <div class="list-group">
-        <div class="list-group-item">
-        <table with="90%" border=1>
-          <tr><td align="right" with="30%">Name</td><td>{{input type="text"  placeholder="New Task Name" value=newName  insert-newline="createTask" }}</td></tr>
-          <tr><td align="right" with="30%">Description</td><td>{{input type="text"  placeholder="New Task Description" value=newDescription insert-newline="createTask" }}</td></tr>
-          <tr><td align="right" with="30%">Location</td><td>{{input type="text"  placeholder="New Task Location" value=newLocation  insert-newline="createTask"}}</td></tr>
-          <tr><td align="right" with="30%">Start Date</td><td>{{input type="date"  value=newStartDate insert-newline="createTask"}}</td></tr>
-          <tr><td align="right" with="30%">End Date</td><td>{{input type="date" value=newEndDate insert-newline="createTask" }}</td></tr>
-        </table>
-          <button class="btn btn-primary btn-sm new-task-button" {{action "createTask"}}
-            {{bind-attr disabled=disabled}}>Add</button>
-        </div>
-        <table class="list">
-        <tr>
+  <script type="text/x-handlebars" data-template-name="index" >
+    <p>Simple TODO list application.<br>
+A simple RestFull application using Spring-boot+JPA+Hibernate+MySQL
+</p>
+
+  </script>
+
+  <script type="text/x-handlebars" data-template-name="tasks/index">
+
+    {{#if tasksPresent}}
+
+      <p>Nr of tasks = {{content.length}}</p>
+
+      <table class="table table-hover">
+      <tr>
         <th>Name</th>
         <th>Description</th>
         <th>Start Date</th>
         <th>End Date</th>
         <th>Location</th>
         <th></th>
-        </tr>
-        {{#each model}}
-            <tr>
-              <td>{{name}}</td>
-              <td>{{description}}</td>
-              <td>{{startDate}}</td>
-              <td>{{endDate}}</td>
-              <td>{{location}}</td>
-              <td>
-              <button class="btn btn-primary btn-sm del-task-button" {{action "removeTask(id)"}}>Del</button>
-              </td>
-            </tr>
+        <th></th>
+      </tr>
+        {{#each task in controller itemController="tasksEdit"}}
+          <tr>
+          <td>{{task.name}}</td>
+          <td>{{task.description}}</td>
+          <td>{{task.startDate}}</td>
+          <td>{{task.endDate}}</td>
+          <td>{{task.location}}</td>
+          <td>{{#link-to "tasks.edit" task}}<img src="images/edit-icon.png"/>{{/link-to}}</td>
+          <td><a href="#" {{action removeTask task.id}}><img src="images/delete-icon.png" border="0"/></a></td>
+          </tr>
         {{/each}}
-        </table>
-    </div>
+      </table>
+
+    {{else}}
+      No tasks present.
+    {{/if}}
+
+    <p>{{#link-to "tasks.new"}}<img src="images/add-icon.png"/> New task{{/link-to}}</p>
+
+    
   </script>
 
+  <script type="text/x-handlebars" data-template-name="_taskForm" >
+      <form class="form-horizontal">
+      <div class="control-group">
+        <label class="control-label" for="latitude">Name</label>
+        <div class="controls">
+          {{view Ember.TextField valueBinding="name"}}
+        </div>
+      </div>
+      <div class="control-group">
+        <label class="control-label" for="longitude">Description</label>
+        <div class="controls">
+          {{view Ember.TextField valueBinding="description"}}
+        </div>
+      </div>
+      <div class="control-group">
+        <label class="control-label" for="startDate">Start Date</label>
+        <div class="controls">
+          {{view Ember.TextField valueBinding="startDate"}}
+        </div>
+      </div>
+      <div class="control-group">
+        <label class="control-label" for="startDate">End Date</label>
+        <div class="controls">
+          {{view Ember.TextField valueBinding="endDate"}}
+        </div>
+      </div>
+      <div class="control-group">
+        <label class="control-label" for="accuracy">Location</label>
+        <div class="controls">
+          {{view Ember.TextField valueBinding="location"}}
+        </div>
+      </div>
+    </form>
+  </script>
+
+  <script type="text/x-handlebars" data-template-name="tasks/edit" >
+    
+    {{#if controller.isNew}}
+      <h1>New Task</h1>
+    {{else}}
+      <h1>Edit Task</h1>
+    {{/if}}
+
+      {{partial "taskForm"}}
+
+      <p>
+        <button {{action updateItem this}}>Update record</button>
+      </p>
+  </script>
+
+
   <script src="js/jquery-1.9.1.js"></script>
-  <script src="js/handlebars-1.0.0.js"></script>
-  <script src="js/ember-1.0.0.js"></script>
+  <script src="js/handlebars-v1.3.0.js"></script>
+  <script src="js/ember-1.5.1.js"></script>
+  <script src="js/ember-data-1.0.0-beta.7.f87cba88.js"></script>
   <script src="js/bootstrap.js"></script>
   <script src="js/app.js"></script>
-
 </body>
 </html>

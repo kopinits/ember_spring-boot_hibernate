@@ -1,100 +1,146 @@
-App = Ember.Application.create();
-
-App.Task = Ember.Object.extend({
-  id: '',
-  name: '',
-  description: '',
-  startDate: '',
-  endDate: '',
-  location: '',
-  slug: function() {
-    return this.get('name').dasherize();
-  }.property('name'),
-});
-
-App.Task.reopenClass({
-  createRecord: function(data) {
-    var Task = App.Task.create({ id: data.id, name: data.name, description:data.description,
-    startDate:data.startDate, endDate:data.endDate, location:data.location});
-    return Task;
-  }
-});
+App = Ember.Application.create({ LOG_TRANSITIONS: true});
 
 App.Router.map(function() {
-  this.route('tasks', { path: ':slug' });
+  this.route("index", { path: "/" });
+
+  this.resource("tasks", function(){
+      console.log("Inside tasks....");
+      this.route("new", {path:"/new"});
+      this.route("edit", {path: "/:task_id" });
+  });
+
 });
 
-App.IndexRoute = Ember.Route.extend({
-  beforeModel: function() {
-    this.transitionTo('tasks');
+App.ApplicationSerializer = DS.RESTSerializer.extend({
+  primaryKey: 'id'
+});
+
+App.ApplicationAdapter = DS.RESTAdapter.extend({
+    host: 'http://localhost:8080/task/'
+});
+
+
+App.Store = DS.Store.extend({
+  adapter: 'App.ApplicationAdapter'
+});
+
+
+App.Task = DS.Model.extend({
+    name: DS.attr('string'),
+    description: DS.attr('string'),
+    location: DS.attr('string'),
+    startDate: DS.attr('string'),
+    endDate: DS.attr('string')
+});
+
+App.TasksIndexRoute = Ember.Route.extend({
+
+  setupController: function(controller) {
+      var tasks = Ember.A();
+      Ember.$.getJSON('http://localhost:8080/task/list', function(Tasks) {
+          Tasks.forEach(function(data) {
+              tasks.pushObject(data);
+          });
+      });
+    controller.set('content', tasks);
+  },
+
+  renderTemplate: function() {
+    this.render('tasks.index',{into:'application'});
   }
+
+});
+
+App.TasksEditRoute = Ember.Route.extend({
+
+  setupController: function(controller, model) {
+      this.controllerFor('tasks.edit').setProperties({isNew: false,content:model});
+  },
+
+  renderTemplate: function() {
+    this.render('tasks.edit',{into:'application'});
+  }
+
+});
+
+App.TasksNewRoute = Ember.Route.extend({
+  setupController: function(controller, model) {
+        var newTask = this.store.createRecord('task',{});
+        this.controllerFor('tasks.edit').setProperties({isNew: true,content:newTask});
+  },
+  renderTemplate: function() {
+    this.render('tasks.edit',{into:'application'});
+  }
+
 });
 
 App.TasksRoute = Ember.Route.extend({
-  model: function() {
-    var TaskObjects = Ember.A();
-    Ember.$.getJSON('http://localhost:8080/task/list', function(Tasks) {
-      Tasks.forEach(function(data) {
-        TaskObjects.pushObject(App.Task.createRecord(data));
-      });
-    });
-    return TaskObjects;
-  },
-  actions: {
-    createTask: function() {
-      var name = this.get('controller').get('newName');
-      var description = this.get('controller').get('newDescription');
-      var startDate = this.get('controller').get('newStartDate');
-      var endDate = this.get('controller').get('newEndDate');
-      var newlocation = this.get('controller').get('newLocation');
-
-      Ember.$.ajax('http://localhost:8080/task/save', {
-        type: 'POST',
-        dataType: 'json',
-        data: { id: null, name: name, description:description,
-          startDate:startDate, endDate:endDate, location:newlocation },
-        context: this,
-        success: function(data) {
-          var Task = App.Task.createRecord(data);
-          this.modelFor('tasks').pushObject(Task);
-          this.get('controller').set('newName', '');
-          this.get('controller').set('newDescription', '');
-          this.get('controller').set('newStartDate', '');
-          this.get('controller').set('newEndDate', '');
-          this.get('controller').set('newLocation', '');
+    actions: {
+        updateItem: function(task) {
+            alert(JSON.stringify(task));
+            $.ajax('http://localhost:8080/task/save/', {
+                type: 'POST',
+                dataType: "json",
+                data: JSON.stringify(task),
+                context: this,
+                success: function(data) {
+                    alert('Task updated');
+                },
+                error: function() {
+                    alert('Failed to save Task');
+                }
+            });
         },
-        error: function() {
-          alert('Failed to save Task');
+        removeTask: function(id) {
+            var task = { id: id, name: null, description:null,
+                startDate:null, endDate:null, location:null };
+            alert(JSON.stringify(task));
+            $.ajax({
+                url:'http://localhost:8080/task/remove/',
+                type: 'DELETE',
+                dataType: "json",
+                data: JSON.stringify(task),
+                context: this,
+                success: function(data) {
+                    alert('Task removed');
+                },
+                error: function() {
+                    alert('Failed to remove Task');
+                }
+            });
         }
-      });
-    },
-    removeTask: function(id) {
-      Ember.$.ajax('http://localhost:8080/task/remove', {
-        type: 'DELETE',
-        dataType: 'json',
-        data: { id: id, name: null, description:null,
-          startDate:null, endDate:null, location:null },
-        context: this,
-        success: function(data) {
-          alert('Task removed');
-        },
-        error: function() {
-          alert('Failed to save Task');
-        }
-      });
     }
-  }
+});
+
+App.TasksEditController = Ember.ObjectController.extend({
+  isNew: function() {
+    console.log("calculating isNew");
+    return this.get('content').get('id');
+  }.property()
 });
 
 
-App.TasksController = Ember.ArrayController.extend({
-  newName: '',
-  newDescription: '',
-  newLocation: '',
-  newStartDate: '',
-  newEndDate: '',
-  disabled: function() {
-    return Ember.isEmpty(this.get('newName'));
-  }.property('newName')
+App.TasksIndexController = Ember.ArrayController.extend({
+  tasksPresent: function() {
+    var itemsPresent = this.get('content').get('length') > 0;
+    return itemsPresent;
+  }.property("content.@each")
 });
 
+App.NavView = Ember.View.extend({
+    tagName: 'li',
+    classNameBindings: ['active'],
+
+    didInsertElement: function () {
+          this._super();
+          this.notifyPropertyChange('active');
+          var _this = this;
+          this.get('parentView').on('click', function () {
+              _this.notifyPropertyChange('active');
+          });
+    },
+
+    active: function() {
+      return this.get('childViews.firstObject.active');
+    }.property()
+});

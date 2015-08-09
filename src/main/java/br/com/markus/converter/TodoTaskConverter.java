@@ -6,6 +6,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -16,15 +18,16 @@ import java.util.Iterator;
 @Component
 public class TodoTaskConverter {
 
-    public TodoTask toTask(TodoTaskDTO todoTaskDTO) {
+    public TodoTask toTask(TodoTaskDTO todoTaskDTO) throws ParseException {
         TodoTask todoTask = new TodoTask();
         if (StringUtils.isNotBlank(todoTaskDTO.getId())) {
             todoTask.setId(Long.valueOf(todoTaskDTO.getId()));
         }
         todoTask.setDescription(todoTaskDTO.getDescription());
         todoTask.setName(todoTaskDTO.getName());
-        todoTask.setStartDate(new Date(Long.valueOf(todoTaskDTO.getStartDate())));
-        todoTask.setEndDate(new Date(Long.valueOf(todoTaskDTO.getEndDate())));
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        todoTask.setStartDate(sdf.parse(todoTaskDTO.getStartDate()));
+        todoTask.setEndDate(sdf.parse(todoTaskDTO.getEndDate()));
         todoTask.setLocation(todoTaskDTO.getLocation());
         return todoTask;
     }
@@ -34,8 +37,9 @@ public class TodoTaskConverter {
         todoTaskDTO.setId(todoTask.getId().toString());
         todoTaskDTO.setDescription(todoTask.getDescription());
         todoTaskDTO.setName(todoTask.getName());
-        todoTaskDTO.setStartDate(String.valueOf(todoTask.getStartDate().getTime()));
-        todoTaskDTO.setEndDate(String.valueOf(todoTask.getEndDate().getTime()));
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        todoTaskDTO.setStartDate(sdf.format(todoTask.getStartDate()));
+        todoTaskDTO.setEndDate(sdf.format(todoTask.getEndDate()));
         todoTaskDTO.setLocation(todoTask.getLocation());
         return todoTaskDTO;
     }

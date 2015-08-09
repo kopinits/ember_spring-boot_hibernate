@@ -14,8 +14,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.text.ParseException;
 import java.util.Date;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -111,7 +113,7 @@ public class TodoTaskControllerTest extends ApplicationTests {
     @Test
     public void testRemoveTask() throws Exception {
         TodoTaskDTO todoTaskDTO = persistNewTodoTask();
-        mockMvc.perform(get("/task/get")
+        mockMvc.perform(delete("/task/remove")
                 .content(asJsonString(todoTaskDTO))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
@@ -121,7 +123,7 @@ public class TodoTaskControllerTest extends ApplicationTests {
     @Test
     public void testRemoveTaskFail() throws Exception {
         TodoTaskDTO todoTaskDTO = persistNewTodoTask();
-        mockMvc.perform(post("/task/get")
+        mockMvc.perform(post("/task/remove")
                 .content(asJsonString(todoTaskDTO))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
@@ -143,12 +145,12 @@ public class TodoTaskControllerTest extends ApplicationTests {
         todoTaskDTO.setName("Default TodoTask");
         todoTaskDTO.setDescription("Default Description");
         todoTaskDTO.setLocation("Default Location");
-        todoTaskDTO.setStartDate(String.valueOf(new Date().getTime()));
-        todoTaskDTO.setEndDate(String.valueOf(new Date().getTime()));
+        todoTaskDTO.setStartDate("07/08/2015");
+        todoTaskDTO.setEndDate("08/08/2015");
         return todoTaskDTO;
     }
 
-    private TodoTaskDTO persistNewTodoTask() {
+    private TodoTaskDTO persistNewTodoTask() throws Exception {
         TodoTask savedTask = taskDAO.save(converter.toTask(getDefaultTaskDTO()));
         return converter.fromTask(savedTask);
     }
